@@ -2,9 +2,12 @@ from math import log
 from utils import get_subset, majority_count
 
 class Tree:
+    """Calculate the tree architecture.
+    """    
     def __init__(self, name, attributes):
         self.name = name
         self.attributes = attributes
+
 
     def _compute_entropy(self, dataset):
         """Compute entropy.
@@ -163,7 +166,7 @@ class Tree:
         Returns:
             lsit -- Decisions.
         """        
-        
+
         desicions = []
         for sample in testset:
             desicions.append(self._make_desicion(tree, sample))
