@@ -13,8 +13,8 @@ def get_args():
 
 if __name__ == '__main__':
     args = get_args()
-    trainset, classes = read_file(args.trainset, 'trainset')
-    print('classes:\n', classes)
+    trainset, attributes = read_file(args.trainset, 'trainset')
+    print('attributes:\n', attributes)
     print('dataset:\n', trainset)
     print('---------------------------------------------')
     
@@ -30,9 +30,9 @@ if __name__ == '__main__':
             break
         
         print('----------------Creating tree----------------')
-        tr = Tree(alg_name, classes)
-        classes_tmp = classes[:]
-        tree = tr.create_tree(trainset, classes_tmp)
+        tr = Tree(alg_name, attributes)
+        attributes_tmp = attributes[:]
+        tree = tr.create_tree(trainset, attributes_tmp)
         print('tree:\n', tree)
         tp = TreePlotter(tree, alg_name)
         tp.plot()

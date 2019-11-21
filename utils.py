@@ -3,16 +3,16 @@ import operator
 def read_file(file_name, mode='trainset'):
     with open(file_name, 'r') as f:
         dataset = []
-        classes = []
+        attributes = []
         for i, line in enumerate(f.readlines()):
             line = line.strip().split(',')
             if mode == 'trainset' and i == 0:
-                # classes
-                classes = [l for l in line]
+                # attributes
+                attributes = [l for l in line]
             else:
                 dataset.append(line)
 
-    return dataset, classes
+    return dataset, attributes
 
 
 def get_subset(dataset, axis, value):

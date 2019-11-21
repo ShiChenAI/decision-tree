@@ -2,19 +2,20 @@ from math import log
 from utils import get_subset, majority_count
 
 class Tree:
-    def __init__(self, name, classes):
+    def __init__(self, name, attributes):
         self.name = name
-        self.classes = classes
+        self.attributes = attributes
 
     def _compute_entropy(self, dataset):
-        """Compute entropy
+        """Compute entropy.
         
         Arguments:
-            dataset {list} -- training dataset.
+            dataset {list} -- Training dataset.
         
         Returns:
-            float -- entropy
-        """    
+            float -- Calculated entropy.
+        """
+
         n_samples = len(dataset)
         n_labels = {}
         
@@ -31,7 +32,17 @@ class Tree:
         
         return ent
 
+
     def _select_attribute(self, dataset):
+        """Select attribute to split subset.
+        
+        Arguments:
+            dataset {list} -- Training dataset.
+        
+        Returns:
+            integer -- Selected attribute index.
+        """        
+
         n_features = len(dataset[0]) - 1
         base_entropy = self._compute_entropy(dataset)
         if self.name == 'ID3':
@@ -84,10 +95,21 @@ class Tree:
 
         return selected_attribute
 
+
     def _make_desicion(self, tree, sample):
+        """Make decision using the trained tree.
+        
+        Arguments:
+            tree {dictionary} -- Trained tree.
+            sample {list} -- Sample for decision making.
+        
+        Returns:
+            string -- Decision.
+        """        
+
         root_node_name = list(tree.keys())[0]
         children_nodes = tree[root_node_name]
-        attribute_index = self.classes.index(root_node_name)
+        attribute_index = self.attributes.index(root_node_name)
         desicion = '0'
         for key in children_nodes.keys():
             if sample[attribute_index] == key:
@@ -98,7 +120,18 @@ class Tree:
 
         return desicion
 
-    def create_tree(self, dataset, classes):
+
+    def create_tree(self, dataset, attributes):
+        """Create decision tree using trainset.
+        
+        Arguments:
+            dataset {list} -- Training dataset.
+            attributes {list} -- Attributes.
+        
+        Returns:
+            dictionary -- Trained decision tree.
+        """        
+
         class_list = [sample[-1] for sample in dataset]
         if class_list.count(class_list[0]) == len(class_list):
             return class_list[0]
@@ -106,21 +139,32 @@ class Tree:
             return majority_count(class_list)
 
         selected_attribute = self._select_attribute(dataset)
-        selected_attribute_label = classes[selected_attribute]
+        selected_attribute_label = attributes[selected_attribute]
         print('Current selected attribute: ', selected_attribute_label)
         tree = {selected_attribute_label: {}}
-        del(classes[selected_attribute])
+        del(attributes[selected_attribute])
 
         attribute_list = [sample[selected_attribute] for sample in dataset] 
         unique_vals = set(attribute_list)
         for val in unique_vals:
-            sub_classes = classes[:]
-            tree[selected_attribute_label][val] = self.create_tree(get_subset(dataset, selected_attribute, val), sub_classes)
+            sub_attributes = attributes[:]
+            tree[selected_attribute_label][val] = self.create_tree(get_subset(dataset, selected_attribute, val), sub_attributes)
 
         return tree    
 
-    def test(self, tree, test_dataset):
+
+    def test(self, tree, testset):
+        """Test.
+        
+        Arguments:
+            tree {sictionary} -- Trained tree.
+            testset {list} -- Testset.
+        
+        Returns:
+            lsit -- Decisions.
+        """        
+        
         desicions = []
-        for sample in test_dataset:
+        for sample in testset:
             desicions.append(self._make_desicion(tree, sample))
         return desicions
